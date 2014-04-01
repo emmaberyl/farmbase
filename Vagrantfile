@@ -8,7 +8,7 @@ Vagrant.configure("2") do |config|
   config.vm.network :private_network, ip: "192.168.33.10"
   
   #shared
-  config.vm.synced_folder "~/Development/Projects", "/projects", type: 'nfs'
+  config.vm.synced_folder "C:/Users/Emma/Documents/GitHub/SEOTool", "/projects", type: 'nfs'
 
   #virtualbox
   if defined? VagrantVbguest
