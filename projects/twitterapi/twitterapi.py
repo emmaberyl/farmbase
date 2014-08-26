@@ -1,19 +1,40 @@
+#!/usr/bin/python
+
 import urllib2
 import time
 import datetime
+import twitter
 
-# Set the request authentication headers
-timestamp = datetime.datetime.fromtimestamp(time.time()).strftime('%Y%m%d %H:%M:%S')
-headers = {}
-#'DecibelAppID': '<Your Application ID>',
-#           'DecibelAppKey': '<Your Application Key>',
-#           'DecibelTimestamp': timestamp}
+def DeleteUserNoFailing(id):
+    try:
+        result = api.DestroyFriendship(id)
+        return result
+    except Exception as e:
+        if e == "Rate limit exceeded":
+            #wait 5 minutes and try again
+            sleep(300)
+            DeleteUserNoFailing(id)
+        else:
+            print "failed: " + str(e)
+            return ""
 
-# Send the GET request
-url = 'https://api.twitter.com/1.1/followers/ids.json?cursor=-1&screen_name=benliyanange&count=5000'      
-req = urllib2.Request(url, None, headers)
+api = twitter.Api(
+    consumer_key='b23FnkffFlzz20sSAstUdoFxG',
+    consumer_secret='HHQgoXl3otqdbmvifitedZpWzbiaGw1DYY5sqUmic9TW4SXvqT',
+    access_token_key='490826867-s61pgHrlvHrCXEwmCirpNlVWrMvRR6jjYZX6CX5Z',
+    access_token_secret='6doHGC9O98vVHTEvmPkCMv5fe53YHzcUfODIaDZrtNaRq'
+)
 
-# Read the response
-resp = urllib2.urlopen(req).read()
-print resp;
+me = api.VerifyCredentials()
 
+users = api.GetFriendIDs()
+
+#print users
+
+counter = 0
+
+for id in users:
+    print "Deleting " + str(id)
+    result = DeleteUserNoFailing(id)
+
+#print api.GetFollowers()
