@@ -5,10 +5,11 @@ Vagrant.configure("2") do |config|
   config.vm.box_url = "http://files.vagrantup.com/precise32.box"
 
   #network
-  config.vm.network :private_network, ip: "192.168.33.10"
-  
+  #config.vm.network :private_network, ip: "192.168.33.10"
+  config.vm.network :forwarded_port, guest: 8000, host: 8000
+
   #shared
-  config.vm.synced_folder "C:/Users/Emma/Documents/GitHub/SEOTool", "/projects", type: 'nfs'
+  config.vm.synced_folder "C:/Users/Emma/Documents/GitHub/SEOTool", "/projects"
 
   #virtualbox
   if defined? VagrantVbguest
@@ -23,7 +24,7 @@ Vagrant.configure("2") do |config|
     puppet.manifests_path = "manifests"
     puppet.manifest_file  = "init.pp"
     puppet.module_path = "modules"
-    puppet.options = "--verbose --debug"
+    #puppet.options = "--verbose --debug"
     #puppet.options = "--verbose --noop"
   end
 end
