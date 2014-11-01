@@ -16,9 +16,14 @@ class QueueTests(unittest.TestCase):
         q.addTask(self.waitOneSecond)
         self.assertEqual(1, q.size())
         
+        
     def testSize(self):
-        q = Queue(1)
-        self.assertEqual(0, q.size())
+        
+        q2 = Queue(1)
+        
+        print q2.size()
+        print q2._tasks
+        #self.assertEqual(0, q.size())
         
     def waitOneSecond(self):
         time.sleep(1)
