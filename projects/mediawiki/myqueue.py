@@ -1,7 +1,9 @@
 import multiprocessing
 import time
 
-class Queue:
+# TODO: Callback?  Don't really understand the requirement.
+
+class MyQueue:
     """An asynchronous queuing library."""
     
     def __init__(self, parallelism=1):
@@ -16,21 +18,21 @@ class Queue:
         self._parallelism = parallelism
         self._tasks = multiprocessing.Queue()
         self._jobs = multiprocessing.Queue()
-        self._isRunning = False
+        self._isRunning = multiprocessing.Value('b', False)
     
     def size(self):
         #* @returns {Number} Number of tasks awaiting execution. Does not count any tasks that are in flight
-        return len(self._tasks.qsize())
+        return self._tasks.qsize()
         
     def isRunning(self):
         #* @returns {Boolean} Whether the queue is running or not.
         
-        return self._isRunning
+        return self._isRunning.value
     
     def inFlight(self):
         #* @returns {Number} Number of tasks currently executing.
         
-        return len(self._jobs.qsize())
+        return self._jobs.qsize()
         
     def addTask(self, function):
         # * Adds a new task to the queue. When executed, the task will be passed a callback used to signal the task has completed:
@@ -58,37 +60,41 @@ class Queue:
         
         # don't don't don't let's start #tmbg
         # don't start if we've started
-        if self._isRunning:
+        if self._isRunning.value:
             return
         
+        self._isRunning.value = True
         #fire up our processes
-        for x in range(1, self._parallelism):
-            p = multiprocessing.Process(target = self.startJobs, args=(self._isRunning,))
-            p.start()
-        
-        #this is done in a process so that we can query the status of the queue asynchronously
-        p = multiprocessing.Process(target = self.startJobs, args=(self._isRunning,))
-        p.start()
-    
-    def startJobs(self, _isRunning):
-        # function for executing jobs asynchronously
-        _isRunning = True
-        
-        while len(self._tasks) > 0:
-        
-            p = multiprocessing.Process(target = self._tasks.pop(0))
-            self._jobs.append(p)
-            p.start()
+        for x in range(0, self._parallelism):
             
-            # wait until a parallel job  becomes available
-            while len(self._jobs) >= self._parallelism:
-                #let's wait a bit to give them a chance to finish
-                time.sleep(1)
-                
-                # check if any of the jobs are finished
-                for (i, job) in enumerate(self._jobs):
-                    if not job.is_alive():
-                        # this job is finished, remove it from our inflight jobs
-                        self._jobs.pop(i)
+            p = multiprocessing.Process(target=self.worker, args=(self._tasks, self._jobs, self._isRunning))
+            
+            p.start()
 
-        self._isRunning = False
+    def worker(self, tasksQueue, jobsQueue, isRunning):
+                    
+        while (tasksQueue.qsize() > 0):
+            #potential race condition between multiple processors
+            try:
+                myFunction = tasksQueue.get()
+            except (Queue.Empty):
+                break;
+            # we're tracing this for the ability to count inflight jobs
+            # the actual value here is inconsequential, but may be useful if you wanted to poll your queue
+            jobsQueue.put(myFunction)
+            
+            try:
+                myFunction()
+                #remove something from the jobs queue after complete.  Doesn't really matter what we're just using this as a counter
+                jobsQueue.get()
+            except:
+                # maybe add some logging here?
+                pass
+            
+        if (tasksQueue.qsize() == 0 and jobsQueue.qsize() == 0):
+            isRunning.value = False
+    
+    # def __del__(self):
+        # self._tasks.close()
+        # self._jobs.close()
+        
