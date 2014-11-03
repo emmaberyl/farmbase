@@ -1,8 +1,6 @@
 import multiprocessing
 import time
 
-# TODO: Callback?  Don't really understand the requirement.
-
 class MyQueue:
     """An asynchronous queuing library."""
     
