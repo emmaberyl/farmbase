@@ -2,6 +2,7 @@ import unittest
 from myqueue import MyQueue
 import time
 from datetime import datetime
+import os
 
 class QueueTests(unittest.TestCase):
     # test class for MyQueue
@@ -25,9 +26,15 @@ class QueueTests(unittest.TestCase):
         q = MyQueue()
         q.addTask(waitOneSecond)
         q.addTask(waitOneSecond)
+        
+        q.addCallback(callbackFunc)
+        
         q.start()
         
         self.sleepCountAssert(startTime, q, 2)
+        # callback function creates this file.  testing for a file existence is an easy way of passing info between multithreaded tasks
+        self.assertTrue(os.path.isfile("callback.txt"))
+        os.system("rm callback.txt")
     
     def testStartComplex(self):
         q = MyQueue()
@@ -116,6 +123,12 @@ class QueueTests(unittest.TestCase):
         #should only take one second, aka the loaded task should not be run twice
         self.sleepCountAssert(startTime, q, 1)
         
+    def testStartMoreProcsThanTasks(self):
+        q = MyQueue(2)
+        q.addTask(waitOneSecond)
+        q.start()
+        
+        # this should not fail
         
     def sleepCountAssert(self, startTime, q, minSeconds):
         # utility function for time stamping
@@ -142,5 +155,9 @@ def raiseException():
     #print "raiseException"
     raise Exception("Let the Queue Continue!")
 
+ 
+def callbackFunc(theQueue):
+    os.system("touch callback.txt")
+    
 if __name__ == '__main__':
     unittest.main()

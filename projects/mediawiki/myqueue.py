@@ -43,6 +43,16 @@ class MyQueue:
         # * taking a callback to be invoked upon task completion.
         # * @returns The queue object.
         self._tasks.put(function)
+    
+    def addCallback(self, function):
+        # * Adds a callback to be invoked when all tasks have been completed:
+        # *
+        # * callback.call(queue)
+        # *
+        # * @param {Function} callback Function to invoke when all tasks have completed;
+        # * it will be passed the queue object.
+        # * @returns The queue object.
+        self._callBack = function
         
     def start(self):
         # * Begin executing queued tasks.
@@ -92,8 +102,12 @@ class MyQueue:
                 pass
             
         if (tasksQueue.qsize() == 0 and jobsQueue.qsize() == 0):
+            
+            try:
+                self._callBack(self)
+            except:
+                pass
             isRunning.value = False
-    
     # def __del__(self):
         # self._tasks.close()
         # self._jobs.close()
