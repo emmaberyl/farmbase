@@ -1,0 +1,16 @@
+<table>
+    <tr>
+        <td>Type</td>
+        <td>Limit</td>
+        <td>Remaining</td>
+        <td>Reset</td>
+    </tr>
+{% for myRate in myRateLimit %}
+    <tr>
+        <td>{{ myRate.type }}</td>
+        <td>{{ myRate.limit }}</td>
+        <td>{{ myRate.remaining }}</td>
+        <td>{{ myRate.reset }}</td>
+    </tr>
+{% endfor %}
+</table>
