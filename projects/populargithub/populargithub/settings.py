@@ -23,6 +23,7 @@ SECRET_KEY = 'gxdmv1*vetl4d(1)v(yvs*g)+a4=$%mp--**81c@x_9n-zyw^b'
 DEBUG = True
 
 TEMPLATE_DEBUG = True
+TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
 
 ALLOWED_HOSTS = []
 
@@ -36,7 +37,9 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'repo'
+    'repo',
+    'github',
+    'tastypie',
 )
 
 MIDDLEWARE_CLASSES = (
