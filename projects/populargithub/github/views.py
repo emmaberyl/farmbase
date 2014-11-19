@@ -13,20 +13,18 @@ def QueueStatus(request):
     return HttpResponse(template.render(context))
     
 def populate(request):
-    #get the last polling time
-    #todo
-    
+
     apiBaseURL = 'https://api.github.com/'
-    
+
     #get open source repositories
-    url = apiBaseURL + 'repositories'
-    r = requests.get(url)
+    url = 'repositories'
+    r = MakeGitHubRequest(url)
     output = ""
     counter = 0
-    for remoteRepo in r.json():
+    for remoteRepo in r:
         # try to look up this repo
         counter+=1
-        if counter == 10:
+        if counter == 2:
             break
         output += "\n-------------\n Json Object"
         output += json.dumps(remoteRepo, indent=4, separators=(',', ': ')) 
@@ -37,16 +35,17 @@ def populate(request):
         except ObjectDoesNotExist:
             myRepo = Repo(id = remoteRepo["id"])
         finally:
+            # update base description
+            myRepo.full_name = remoteRepo["full_name"]
+            myRepo.description = remoteRepo["description"]
+            myRepo.html_url = remoteRepo["html_url"]
+        
             # get pull requests
             # get request is dependant on ratelimiting parameters that we may have captured
             remotePullRequestURL = apiBaseURL + "repos/" + myRepo.full_name + "/pulls?state=all"
             output += "pulls url: " + remotePullRequestURL
             remotePullRequests = requests.get(remotePullRequestURL)
             
-            # update base description
-            myRepo.full_name = remoteRepo["full_name"]
-            myRepo.description = remoteRepo["description"]
-            myRepo.html_url = remoteRepo["html_url"]
             if 'Etag' in remotePullRequests.headers:
                 myRepo.pulls_Etag = remotePullRequests.headers['ETag']
             #myRepo.pulls_Last_Modified = remotePullRequests.headers['Last-Modified']
@@ -88,3 +87,49 @@ def populate(request):
         #break
         # update stats on repo
     return HttpResponse("<pre>" + output + "</pre>")
+
+def MakeGitHubRequest(url):
+    apiBaseURL = 'https://api.github.com/'
+    
+    #look up our query to see if we can make a conditional request
+    myRequestCache = None
+    try:
+        myRequestCache = GitHubRequestCache.objects.get(pk = url)
+    except ObjectDoesNotExist:
+        myRequestCache = GitHubRequestCache(pk = url, ETag = '')
+    finally:
+    
+        # Make the Request
+        headers = {'ETag':myRequestCache.ETag}
+        r = requests.get(apiBaseURL + url, headers=headers)
+        
+        #record the new ETag
+        myRequestCache.Etag = r.headers['ETag']
+        myRequestCache.save()
+        
+        #record rate limiting for status page
+        type="non-search"
+        if url.startswith("search"):
+            type="search"
+        
+        try:
+            myRateLimit = RateLimit.objects.get(pk = type)
+        except ObjectDoesNotExist:
+            myRateLimit = RateLimit(type = "type")
+        finally:
+            myRateLimit.limit = r.headers['X-RateLimit-Limit']
+            myRateLimit.remaining = r.headers['X-RateLimit-Remaining']
+            s = int(r.headers['X-RateLimit-Reset'])
+            myRateLimit.reset = datetime.datetime.fromtimestamp(s).strftime('%Y-%m-%d %H:%M:%S.%f')
+            myRateLimit.save()
+        
+        # check return status code
+        if r.status_code == 200:
+            return r.json()
+        elif r.status_code == 403:
+            raise Exception("Rate limit has been exceeded")
+        elif r.status_code == 304:
+            #resource has not been modified, no processing needed
+            return None
+        else:
+            raise Exception("Unknown StatusCode: {0}, {1}".format(r.status_code, url))

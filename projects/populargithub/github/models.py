@@ -8,13 +8,12 @@ class RepoQueue(models.Model):
     repos_processed = models.IntegerField(default=0)
     repos_skipped = models.IntegerField(default=0)
     
-class RepoRequest(models.Model):
-    repoqueue = models.ForeignKey(RepoQueue)
-    since = models.IntegerField()
-    Etag = models.CharField(max_length=255)
+class GitHubRequestCache(models.Model):
+    query = models.CharField(max_length=255, primary_key=True)
+    ETag = models.CharField(max_length=255)
     
 class RateLimit(models.Model):
-    type = models.CharField(max_length=255)
+    type = models.CharField(max_length=255, primary_key=True)
     limit = models.IntegerField()
     remaining = models.IntegerField()
     reset = models.DateTimeField()
@@ -26,8 +25,6 @@ class Repo(models.Model):
     description = models.CharField(max_length=255)
     html_url = models.CharField(max_length=255)
     #used for rate limiting
-    pulls_Etag = models.CharField(max_length=255, default=None, null=True)
-    #pulls_Last_Modified = models.DateTimeField(null=True, default=None)
     
     # verify field below:
     # api_url = models.CharField(max_length=255)
