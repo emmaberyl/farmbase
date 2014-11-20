@@ -18,7 +18,7 @@ print datetime.datetime.fromtimestamp(s).strftime('%Y-%m-%d %H:%M:%S.%f')
 print type(r.headers)
 print pickle.dumps(r.headers)
 print r.status_code
-
+print r.headers['ETag']
 for repo in myJson:
     #print json.dumps(repo)
     exit()
