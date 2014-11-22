@@ -18,7 +18,7 @@ class python {
     package { 
       [ "python", "python-setuptools", "python-dev", "python-pip",
         "python-matplotlib", "python-imaging", "python-numpy", "python-scipy",
-        "python-software-properties", "idle", "python-qt4", "python-wxgtk2.8" ]:
+        "python-software-properties", "idle", "python-qt4", "python-wxgtk2.8", "python-psycopg2"]:
         ensure => ["installed"],
         require => Exec['apt-update']    
     }
@@ -221,8 +221,8 @@ include networking
 #include gui
 #include keepuptodate
 include web
-#include sql
-include mongodb
+include sql
+#include mongodb
 
 #include science
 #include pythononwheels
