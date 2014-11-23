@@ -59,11 +59,11 @@ The above will build a 512MB virtual machine running Ubuntu with the following i
 
 Hint: Not everything of this is installed by default. Change comments at the end of manifests/init.pp to influence it.
 	
-## OTHER
+## TESTING A DJANGO APP FROM VAGRANT
 
-You can download different types of "boxes" as your base at the following URL:
+		$ python manage.py runserver 0.0.0.0:8000
+	
+And open web browser to the IP address specified in network configuration within the Vagrantfile, e.g.:
 
-http://www.vagrantbox.es/
+http://192.168.33.10:8000/
 
---------------------------------------------------------------------- 
-Maintained by [Anthony Nystrom](https://github.com/AnthonyNystrom)
