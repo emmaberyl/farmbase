@@ -24,6 +24,6 @@ class FoodLink(models.Model):
     place = models.ForeignKey(Place)
     season = models.ForeignKey(Season)
     def __unicode__(self):
-        return self.food + self.place + self.season
+        return "{0} has {1} in {2}!".format(self.place.place,self.food.food,self.season.season)
 
 
