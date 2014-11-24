@@ -59,6 +59,26 @@ The above will build a 512MB virtual machine running Ubuntu with the following i
 
 Hint: Not everything of this is installed by default. Change comments at the end of manifests/init.pp to influence it.
 	
+## SETTING UP THE DATABASE
+ala: https://help.ubuntu.com/community/PostgreSQL#Introduction
+	
+		$ sudo -u postgres psql postgres			starts psql utility as user "postgres"
+		postgres=# \password						follow by entering "password" twice to set default password
+		postgres=# \q								quit psql
+		
+		$ sudo -u postgres createdb farmerbrown		create default database "farmerbrown"
+
+in case you need to drop and re-create:
+
+		$ sudo -u postgres dropdb farmerbrown
+		
+
+populate the database from included .csv file (/projects/seasonalfooddb.csv):
+		
+		$ python manage.py populate
+		
+
+
 ## TESTING A DJANGO APP FROM VAGRANT
 
 		$ python manage.py runserver 0.0.0.0:8000
@@ -66,4 +86,6 @@ Hint: Not everything of this is installed by default. Change comments at the end
 And open web browser to the IP address specified in network configuration within the Vagrantfile, e.g.:
 
 http://192.168.33.10:8000/
+
+
 
