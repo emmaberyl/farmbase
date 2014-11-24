@@ -73,8 +73,9 @@ in case you need to drop and re-create:
 		$ sudo -u postgres dropdb farmerbrown
 		
 
-populate the database from included .csv file (/projects/seasonalfooddb.csv):
+migrate and then populate the database from included .csv file (/projects/seasonalfooddb.csv):
 		
+		$ python manage.py migrate
 		$ python manage.py populate
 		
 
