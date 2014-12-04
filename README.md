@@ -77,3 +77,7 @@ http://192.168.33.10:8000/admin
 admin = admin
 password = password
 
+For the farmlyvore:
+
+http://192.168.33.10:8000/farmlyvore
+
