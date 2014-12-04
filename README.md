@@ -70,5 +70,10 @@ And open web browser to the IP address specified in network configuration within
 
 http://192.168.33.10:8000/
 
+For the admin panel:
 
+http://192.168.33.10:8000/admin
+
+admin = admin
+password = password
 
