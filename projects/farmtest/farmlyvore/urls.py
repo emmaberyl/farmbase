@@ -5,6 +5,7 @@ from farmlyvore import views
 
 urlpatterns = patterns('',
     url(r'^$', views.index, name='index'),
+    url(r'^farmlyvore/search', views.search, name='search'),
 
 )
 urlpatterns += staticfiles_urlpatterns()
