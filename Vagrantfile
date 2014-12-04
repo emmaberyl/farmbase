@@ -27,4 +27,6 @@ Vagrant.configure("2") do |config|
     puppet.options = "--verbose --debug"
     #puppet.options = "--verbose --noop"
   end
+
+  config.vm.provision :shell, :path => 'vagrant_init.sh'
 end
