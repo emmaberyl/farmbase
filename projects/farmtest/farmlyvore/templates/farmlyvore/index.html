@@ -1,6 +1,15 @@
 {% extends "base.html" %}
 {% block content %}
 
+<form action = "farmlyvore/search" method="get" id="post-form">
+        <input id="zipcode" type="text" class="form-control" placeholder="Enter a zipcode here...">
+        <input type="hidden" name="statecode" id="statecode">
+        <input type="submit" value="Get list of fruits by zipcode" />
+</form>
+
+<div id="food_results">
+</div>
+
 {% if food_list %}
         <ul>
             {% for food in food_list %}

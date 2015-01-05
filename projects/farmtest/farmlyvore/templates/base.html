@@ -1,4 +1,5 @@
 
+{% load staticfiles %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -10,10 +11,21 @@
     <link rel="icon" href="../../favicon.ico">
 
     <title>Farmlivore</title>
- 
+
+    <!--From Emma/Marina-->
+    <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" media="screen">
+    <link href="{% static 'bootstrap/css/bootstrap-select.css' %}" rel="stylesheet" media="screen">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet" media="screen">
+
+    <script src="{% static 'js/jquery-1.11.1.js' %}"></script>
+    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'bootstrap/js/bootstrap-select.js' %}"></script>
+    <script src="{% static 'js/custom.js' %}"></script>
+
     <!-- Bootstrap core CSS -->
     <link href="/static/css/bootstrap.min.css" rel="stylesheet">
     <link href="/static/css/animate.css" rel="stylesheet">
+
 
     <!-- Custom styles for this template -->
     <link href="/static/css/jumbotron-narrow.css" rel="stylesheet">
@@ -33,16 +45,18 @@
 
     <div class="container">
     <!---The Navigation bar -->
+    {% block nav %}
       <div class="header">
         <nav>
           <ul class="nav nav-pills pull-right">
             <li role="presentation" class="active"><a href="/" style=" color: white; background-color: #33B7A9;"> Home </a></li>
-            <li role="presentation"><a href= '{% url "aboutus" %}'>About</a></li>
-            <li role="presentation"><a href="#">Contact</a></li>
+            <li role="presentation"><a href= '/about/'>About</a></li>
+            <li role="presentation"><a href= ''>Contact</a></li>
           </ul>
         </nav>
         <h3 class="text-muted" style = "font-family: 'Courgette', serif; font-weight: 400;">Farmlivore</h3>
       </div>
+      {% endblock %}
        <!---End Navigation bar -->
        {% block test %}<!--start block test-->
        <!--This extends signup.html's Green Rectangle of code-->
@@ -56,16 +70,19 @@
       <!--start of row-->
       <div class="row marketing">
             <div class="col-lg-4">
+
               <strong><h4>Farmers Markets</h4>
               <h5>Enter your Zip Code to find Markets near you.</h5>
               <h5>Where are you?</h5>
-              <p>
+              <p>{% block content %}
+          {% endblock %} </p>
+             <!-- <p>
                    <form action = "" method="GET" >
                         <input id="zipcode" type="text" class="form-control"></br>
                         <input type="hidden" name="statecode" id="statecode"></br>
                         <button type='button' class='btn btn-md btn-success'> Find Markets</button>
                     </form>
-              </p>
+              </p>-->
 
             </div>
       <!--This ends signup.html's Green Rectangle of code-->
@@ -74,12 +91,7 @@
       <!-- this starts the Sign Up Form -->
 
           <div class="col-lg-4 ">
-          {% block content %}
-          {% endblock %} 
-          </div>
-
-         <div class="col-lg-4 ">
-         <strong><h4>Like Our Stuff?</h4>
+                   <strong><h4>Like Our Stuff?</h4>
          </br>
            <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
               <input type="hidden" name="cmd" value="_s-xclick">
@@ -87,14 +99,19 @@
               <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
               <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
             </form>
+
+
+
+          </div>
+
+         <div class="col-lg-4 ">
+         <p>&copy; Farmlivore {% now "Y" %}</p>
         </div>
 
     </div> <!--end row marketing-->
 
     {% endblock %} <!--endblock test-->
-        <footer class="footer">
-        <p>&copy; Farmlivore {% now "Y" %}</p>
-      </footer>
+
       <!--end of row-->
       </div>
 
@@ -102,7 +119,6 @@
 
     </div> 
     <!-- end/container -->
-
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
