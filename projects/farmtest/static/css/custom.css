@@ -1,0 +1,50 @@
+body{
+	background-color: seashell;
+	font-family: Helvetica;
+
+}
+
+.jumbotron{
+
+	background-color: rgb(215, 
+		249, 
+	220);
+
+}
+
+.btn{
+	background-color: rgb(41, 189, 202);
+}
+
+.btn-success {
+	background-color: lightcoral;
+	border-color: white;
+}
+
+a {
+	color: rgb(51, 183, 169);
+}
+
+
+/*____________________________________________________________________________________________ WayPoint _*/
+.animated { 
+	visibility: hidden; 
+	}
+.bounceInLeft, 
+	.bounceInRight, 
+	.fadeInUp, 
+	.fadeInUpDelay, 
+	.fadeInDown, 
+	.fadeInUpD, 
+	.fadeInLeft, 
+	.fadeInRight, 
+	.pulse,
+	.fadeIn { 
+		visibility: visible; 
+		}
+.delay-05s { animation-delay: 0.5s; -webkit-animation-delay: 0.5s; }
+.delay-1s { animation-delay: 1s; -webkit-animation-delay: 1s; }
+.delay-15s { animation-delay: 1.5s; -webkit-animation-delay: 1.5s; }
+.delay-2s { animation-delay: 2s; -webkit-animation-delay: 2s; }
+.delay-25s { animation-delay: 2.5s; -webkit-animation-delay: 2.5s; }
+.delay-3s { animation-delay: 3s; -webkit-animation-delay: 3s; }
