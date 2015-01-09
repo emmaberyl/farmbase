@@ -1,24 +1,70 @@
 {% extends "base.html" %}
 {% block content %}
 
-<form action = "farmlyvore/search" method="get" id="post-form">
-        <input id="zipcode" type="text" class="form-control" placeholder="Enter a zipcode here...">
-        <input type="hidden" name="statecode" id="statecode">
-        <input type="submit" value="Get list of fruits by zipcode" />
-</form>
+       <!--This extends signup.html's Green Rectangle of code-->
+      <div class="jumbotron animated delay-05s pulse">
+          <h1 style=" font-family: 'Courgette', serif; font-weight: 400;">Farmlivore</h1>
+          <h3 style=" font-family: 'Courgette', serif; font-weight: 700;">Your Farmers Market Companion</h2>
+          </br>
+          <p class="lead">Eat the best plants your community has to offer.</p>
+      </div>
 
-<div id="food_results">
-</div>
+      <!--start of row-->
+      <div class="row marketing">
+            <div class="col-lg-4">
 
-{% if food_list %}
-        <ul>
-            {% for food in food_list %}
-                <li><a href="#">{{food.food_name}}</a></li>
-            {% endfor %}
-        </ul>
+              <strong><h4>Farmers Markets</h4>
+              <h5>Enter your Zip Code to find Markets near you.</h5>
+              <h5>Where are you?</h5>
+              <p>  <form action = "farmlyvore/search" method="get" id="post-form">
+                      <input id="zipcode" type="text" class="form-control" placeholder="Enter a zipcode here...">
+                      <input type="hidden" name="statecode" id="statecode">
+                      <input type="submit" value="Get list of fruits by zipcode" />
+                    </form>
+              
+                    <div id="food_results">
+                    </div>
 
-    {% else %}
-        <p>No foods are available.</p>
-    {% endif %}
+                    {% if food_list %}
+                            <ul>
+                                {% for food in food_list %}
+                                    <li><a href="#">{{food.food_name}}</a></li>
+                                {% endfor %}
+                            </ul>
+
+                        {% else %}
+                            <p>No foods are available.</p>
+                    {% endif %} 
+              </p>
+             <!-- <p>
+                   <form action = "" method="GET" >
+                        <input id="zipcode" type="text" class="form-control"></br>
+                        <input type="hidden" name="statecode" id="statecode"></br>
+                        <button type='button' class='btn btn-md btn-success'> Find Markets</button>
+                    </form>
+              </p>-->
+
+            </div>
+      <!--This ends signup.html's Green Rectangle of code-->
+
+
+      <!-- this starts the Sign Up Form -->
+
+        <div class="col-lg-4 ">
+            <strong><h4>Like Our Stuff?</h4>
+            </br>
+            <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+              <input type="hidden" name="cmd" value="_s-xclick">
+              <input type="hidden" name="hosted_button_id" value="Y2ZTKD73QZ6T8">
+              <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+              <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+            </form>
+        </div>
+
+        <div class="col-lg-4 ">
+          <p>&copy; Farmlivore {% now "Y" %}</p>
+        </div>
+
+      </div> <!--end row marketing-->
 
 {% endblock %}
